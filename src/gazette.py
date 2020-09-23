@@ -1,88 +1,128 @@
 import os,sys, re
 from math import ceil
-
+import Levenshtein as lv
 
 class Gazette:
     def __init__(self, file_path:str, city:str, date:str):
         self.file = self.load_file(file_path)
         self.city = city
         self.date = date
-
+        
+        self.minimum_spacing_between_cols = 1
+        self.min_break_value = 0.75
+        self.max_allowed_cols = 5
         self.split_re = r"  +"
+
         self.pages = self.each_page()
         self.linear_text = ""
-        self.pages_avg_col = [self.calc_avg_cols(x) for x in self.pages]
-        self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
+        self.cols_dividers = [self.vertical_lines_finder(x) for x in self.pages]
 
+        self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
+
+        self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         self.__split_cols()
 
     def each_page(self):
         pages = []
-        page_buff = [] 
+        page_buff = []
 
         for line in self.file:
-            page_buff.append(line)
             if '\014' in line:
                 pages.append(page_buff)
-                page_buff = []
-        
+                page_buff = [line.strip('\014')]
+            else: 
+                page_buff.append(line)
+
         if len(page_buff) > 0:
             pages.append(page_buff)
 
         return pages
+    
 
 
     def __split_cols(self):
         """ __split_cols
         Splits doc cols into a linear layout
         """
-        for i,page in enumerate(self.pages):
-            if self.pages_avg_col[i] >= 1.2 * self.total_avg_col or self.pages_avg_col[i] < 2:
-                #  print("\n".join(page))
-                #  linear_text += "\n".join(line for line in page) + "\n"
-                self.linear_text += str("".join(page))
-                continue
-            
-
-            page_in_cols = []
-            footer = []
-            for j,line in enumerate(page):
-                line = line.strip()
-                #  print(line)
-                cols = self.split_line_naive_strategy(line)
-                if len(cols) == 1 and self.pages_avg_col[i] >= 2 and j > 0.9*len(page):
-                    footer.append(" ".join(cols))
-                else:
-                    page_in_cols.append(cols)
-
-           
-            page_text = ""
-            for col in range(max([len(x) for x in page_in_cols])):
-                for line in page_in_cols:
-                    try:
-                        page_text += str(line[col]) + "\n"
-                    except:
-                        page_text += str(line[0]) + "\n"
-
-
-            self.linear_text += page_text + "\n"
-            self.linear_text += "\n".join(footer) + "\n\014\n"
-            
-
-    def split_line_naive_strategy(self, line):
-        return list(map(lambda x: x.strip(), re.split(self.split_re, line)))
-
-    def split_line_local_strategy(self, lines):
-        pass
-
-    def calc_avg_cols(self, page):
-        cols_sum = 0
-
-        for line in page:
-            line = line.strip()
-            cols_sum += (len(re.findall(self.split_re, line)) + 1) 
         
-        return round(cols_sum / len(page))
+        for i,page in enumerate(self.pages):
+            if  self.pages_avg_col[i] >= 1.2 * self.total_avg_col \
+                or self.pages_avg_col[i] < 2 \
+                or len(self.cols_dividers[i]) >= self.max_allowed_cols\
+                or (split_lines := self.cols_dividers[i]) == []:
+
+                self.linear_text += str("".join(page)) + '\014'
+                continue
+
+
+            lines = []
+            for line in page:
+                prev = 0
+                curr_line = []
+                for col_n, acc in split_lines:
+                    if len(line) > col_n and line[col_n] != ' ':
+                        lines.append([line])
+                        prev = -1
+                        break
+
+                    curr_line.append(line[prev:col_n])
+                    prev = col_n
+                if prev != -1: curr_line.append(line[split_lines[-1][0]:])
+                
+                lines.append(curr_line)
+            
+
+            self.linear_text += self.lines_to_text(lines) + '\014'
+
+    def lines_to_text(self, lines):
+        max_cols = max(map(lambda x: len(x), lines))
+        txt = ""
+        for col_i in range(max_cols):
+            for line in lines:
+                if len(line) > col_i:
+                    txt += "".join(line[col_i].strip('\n')) + '\n'
+
+        return txt[:-1]
+
+
+    def vertical_lines_finder(self, page):
+        max_cols = max([len(line) for line in page])
+
+        contiguous_space_lengths = []
+        for col_n in range(max_cols-1, -1, -1):
+            ctd = 0
+            max_val = 0
+            for i,line in enumerate(page):
+                max_val = max(max_val, ctd)
+                if len(line) > col_n:
+                    if line[col_n] == ' ':
+                        ctd += 1
+                    else: #if len(page)>i+1 and len(page[i+1]) > col_n and  page[i+1][col_n] != ' ':
+                        ctd = 0
+            
+            contiguous_space_lengths.append((col_n, round(max_val/len(page), 2)))
+
+        v_lines = sorted(contiguous_space_lengths, key=lambda x: x[1], reverse=True)
+
+        if len(v_lines) == 0 or v_lines[0][1] < self.min_break_value: return []
+        v_lines = [i for i in v_lines if i[1] > self.min_break_value]
+        if len(v_lines) == 0: return []
+        splits = [v_lines[0]]
+
+        col_ctd = 1
+
+        while col_ctd < max_cols:
+            try:
+                if abs(splits[-1][0] - v_lines[col_ctd][0]) >= 10:
+                    if v_lines[col_ctd] not in splits:
+                        splits.append(v_lines[col_ctd])
+            except: pass
+            col_ctd +=1
+
+        
+        return splits
+
+
     
 
     @staticmethod
@@ -94,8 +134,6 @@ class Gazette:
         return lines
 
 
-    
-
 
 if __name__ == "__main__":
     file = sys.argv[1]
@@ -103,8 +141,9 @@ if __name__ == "__main__":
     print(file)
     with open(file, 'r') as f:
         g = Gazette(file, "sa", "10/0/0")
-        print(g.pages_avg_col)
-        print(len(g.pages))
+        print("Média de colunas por página:   ", g.pages_avg_col)
+        print("Quantidade de páginas:         ", len(g.pages))
+        print("Média de colunas:              " ,g.total_avg_col)
         print(g.linear_text)
 
 
