@@ -7,44 +7,50 @@ class Gazette:
         self.file = self.load_file(file_path)
         self.city = city
         self.date = date
-        
+
         self.minimum_spacing_between_cols = 1
         self.min_break_value = 0.75
         self.max_allowed_cols = 5
         self.split_re = r"  +"
 
-        self.pages = self.each_page()
+        self.pages = self.get_list_of_pages()
         self.linear_text = ""
         self.cols_dividers = [self.vertical_lines_finder(x) for x in self.pages]
 
         self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
-
+        # print(self.pages_avg_col)
         self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         self.__split_cols()
 
-    def each_page(self):
+
+    def get_list_of_pages(self, page_break='\014'):
+        """ get_list_of_pages
+
+           Retorna uma lista de páginas. Cada página é uma lista de linhas
+        """
+
         pages = []
         page_buff = []
 
+
         for line in self.file:
-            if '\014' in line:
+            if page_break in line:
                 pages.append(page_buff)
-                page_buff = [line.strip('\014')]
-            else: 
+                page_buff = [line.strip(page_break)]
+            else:
                 page_buff.append(line)
 
         if len(page_buff) > 0:
             pages.append(page_buff)
 
         return pages
-    
 
 
     def __split_cols(self):
         """ __split_cols
         Splits doc cols into a linear layout
         """
-        
+
         for i,page in enumerate(self.pages):
             if  self.pages_avg_col[i] >= 1.2 * self.total_avg_col \
                 or self.pages_avg_col[i] < 2 \
@@ -59,7 +65,7 @@ class Gazette:
             for line in page:
                 prev = 0
                 curr_line = []
-                for col_n, acc in split_lines:
+                for col_n, _ in split_lines:
                     if len(line) > col_n and line[col_n] != ' ':
                         lines.append([line])
                         prev = -1
@@ -67,10 +73,9 @@ class Gazette:
 
                     curr_line.append(line[prev:col_n])
                     prev = col_n
-                if prev != -1: curr_line.append(line[split_lines[-1][0]:])
-                
+                if prev != -1: curr_line.append(line[split_lines[-1][0]])
+
                 lines.append(curr_line)
-            
 
             self.linear_text += self.lines_to_text(lines) + '\014'
 
@@ -99,7 +104,7 @@ class Gazette:
                         ctd += 1
                     else: #if len(page)>i+1 and len(page[i+1]) > col_n and  page[i+1][col_n] != ' ':
                         ctd = 0
-            
+
             contiguous_space_lengths.append((col_n, round(max_val/len(page), 2)))
 
         v_lines = sorted(contiguous_space_lengths, key=lambda x: x[1], reverse=True)
@@ -119,11 +124,9 @@ class Gazette:
             except: pass
             col_ctd +=1
 
-        
+
         return splits
 
-
-    
 
     @staticmethod
     def load_file(path):
@@ -134,16 +137,16 @@ class Gazette:
         return lines
 
 
-
 if __name__ == "__main__":
-    file = sys.argv[1]
+    input_f = sys.argv[1]
+    output_f = sys.argv[2]
 
-    print(file)
-    with open(file, 'r') as f:
-        g = Gazette(file, "sa", "10/0/0")
-        print("Média de colunas por página:   ", g.pages_avg_col)
-        print("Quantidade de páginas:         ", len(g.pages))
-        print("Média de colunas:              " ,g.total_avg_col)
-        print(g.linear_text)
+    for file in os.listdir(input_f):
+        g = Gazette(input_f + '/' + file,"", "")
+
+        print(f"Parsing {file}")
+        with open( output_f + "/" + file, 'w') as f:
+            f.write(g.linear_text)
+
 
 
