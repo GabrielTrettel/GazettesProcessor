@@ -1,6 +1,6 @@
 import os,sys, re
 from math import ceil
-import Levenshtein as lv
+
 
 class Gazette:
     def __init__(self, file_path:str, city:str, date:str):
@@ -22,6 +22,7 @@ class Gazette:
         self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         self.__split_cols()
 
+        print(self.linear_text)
 
     def get_list_of_pages(self, page_break='\014'):
         """ get_list_of_pages
@@ -52,10 +53,12 @@ class Gazette:
         """
 
         for i,page in enumerate(self.pages):
+            split_lines = self.cols_dividers[i]
+
             if  self.pages_avg_col[i] >= 1.2 * self.total_avg_col \
                 or self.pages_avg_col[i] < 2 \
                 or len(self.cols_dividers[i]) >= self.max_allowed_cols\
-                or (split_lines := self.cols_dividers[i]) == []:
+                or split_lines == []:
 
                 self.linear_text += str("".join(page)) + '\014'
                 continue
@@ -73,21 +76,26 @@ class Gazette:
 
                     curr_line.append(line[prev:col_n])
                     prev = col_n
-                if prev != -1: curr_line.append(line[split_lines[-1][0]])
+
+
+                a = split_lines[-1][0]
+                if len(line) > a and prev != -1: curr_line.append(line[a])
 
                 lines.append(curr_line)
 
             self.linear_text += self.lines_to_text(lines) + '\014'
 
-    def lines_to_text(self, lines):
-        max_cols = max(map(lambda x: len(x), lines))
-        txt = ""
-        for col_i in range(max_cols):
-            for line in lines:
-                if len(line) > col_i:
-                    txt += "".join(line[col_i].strip('\n')) + '\n'
 
-        return txt[:-1]
+
+    def lines_to_text(self, lines):
+       max_cols = max(map(lambda x: len(x), lines))
+       txt = ""
+       for col_i in range(max_cols):
+           for line in lines:
+               if len(line) > col_i:
+                   txt += "".join(line[col_i].strip('\n')) + '\n'
+
+       return txt[:-1]
 
 
     def vertical_lines_finder(self, page):
