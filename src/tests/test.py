@@ -1,5 +1,5 @@
 import unittest
-from gazette import Gazette
+from ../gazette_processor.gazette import Gazette
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
         self.gp = Gazette('test_file.txt', '', '')
