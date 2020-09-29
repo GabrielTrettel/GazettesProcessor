@@ -3,7 +3,33 @@ from math import ceil
 
 
 class Gazette:
+    """
+    
+    Loads and parses municipal gazettes. 
+
+
+    Attributes:
+        file_path: The string path to a gazette.
+        file: The string containing a gazette's content.
+        city: A string for the city (or cities) of the gazette.
+        date: A string for the date of the gazette.
+
+        minimum_spacing_between_cols: An integer for minimum spacingbetween columns. Defaults to 1. 
+        min_break_value: A float for min_break_value. Defaults to 0.75.
+        max_allowed_cols: An int for the maximum number of columns allowed per page.
+        split_re: A regex for splitting
+        
+        pages: A list of pages, each page is a list of lines.
+
+        cols_dividers: ?
+        pages_avg_col: ?
+        total_avg_col: ?
+    
+    
+    """
     def __init__(self, file_path:str, city:str, date:str):
+        """Inits Gazette with a path, a city and a date."""
+
         self.file = self.load_file(file_path)
         self.city = city
         self.date = date
@@ -24,11 +50,20 @@ class Gazette:
 
         print(self.linear_text)
 
+    
     def get_list_of_pages(self, page_break='\014'):
-        """ get_list_of_pages
+    """ 
 
-           Retorna uma lista de páginas. Cada página é uma lista de linhas
-        """
+    Uses file string in self.file and converts it to  a list of lists. 
+
+    Args:
+        page_break (str): A string used to delimit page separation 
+        in the target document.
+    
+    Returns:
+        list: A list of pages, each page is a list of lines.
+    
+    """
 
         pages = []
         page_buff = []
@@ -48,8 +83,8 @@ class Gazette:
 
 
     def __split_cols(self):
-        """ __split_cols
-        Splits doc cols into a linear layout
+        """
+        Splits columns of document into a linear layout
         """
 
         for i,page in enumerate(self.pages):
