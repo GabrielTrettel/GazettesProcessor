@@ -1,9 +1,11 @@
 import unittest
-import gazette_processor
+from gazette_processor.gazette import Gazette
+import os
+
 
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
-        self.gp = Gazette('test_file.txt', '', '')
+        self.gp = Gazette('test/test_file.txt', '', '')
 
 
     def test_get_list_of_pages(self):
