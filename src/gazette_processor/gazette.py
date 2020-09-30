@@ -98,39 +98,106 @@ class Gazette:
         
         """
 
-        for i,page in enumerate(self.pages):
-            split_lines = self.cols_dividers[i]
+        column_dividers = self.cols_dividers
+        average_columns_per_page = self.pages_avg_col
 
-            if  self.pages_avg_col[i] >= 1.2 * self.total_avg_col \
-                or self.pages_avg_col[i] < 2 \
-                or len(self.cols_dividers[i]) >= self.max_allowed_cols\
-                or split_lines == []:
+        for page_index, page in enumerate(self.pages):
 
-                self.linear_text += str("".join(page)) + '\014'
+            page_column_dividers =  column_dividers[page_index]
+
+            page_n_of_columns = len(page_column_dividers)
+            page_average_columns = average_columns_per_page[page_index]
+            
+            if  self.test_if_page_is_not_splittable(page_average_columns, page_column_dividers, page_n_of_columns):
+
+                page_add_to_linear_text = str("".join(page)) + '\014'
+
+                self.linear_text += page_add_to_linear_text
                 continue
 
 
-            lines = []
-            for line in page:
-                prev = 0
-                curr_line = []
-                for col_n, _ in split_lines:
-                    if len(line) > col_n and line[col_n] != ' ':
-                        lines.append([line])
-                        prev = -1
-                        break
+            page_lines_in_one_column = self.get_lines_in_one_column(page, page_column_dividers)
 
-                    curr_line.append(line[prev:col_n])
-                    prev = col_n
+            self.linear_text += self.lines_to_text(page_lines_in_one_column) + '\014'
 
 
-                a = split_lines[-1][0]
-                if len(line) > a and prev != -1: curr_line.append(line[a])
+    def get_lines_in_one_column(self, page, page_column_dividers):
+        """
+        
+        Args
+            page: A list of strings, and each string is a line in the page. 
 
-                lines.append(curr_line)
+            page_column_dividers: A list of ints that were selected as column dividers.
 
-            self.linear_text += self.lines_to_text(lines) + '\014'
+        Returns: A list of strings, and each string is a line in the new page.
+        
+        """
 
+        lines = []
+        for line in page:
+            column_beginning = 0
+            current_line = []
+
+
+            for column_divider, _ in page_column_dividers:
+
+                line_size = len(line)
+
+                if line_size > column_divider:
+                    current_breakpoint = line[column_divider]
+                else:
+                    current_breakpoint = ""
+
+                if line_size > column_divider and current_breakpoint != ' ':
+
+                    single_column = [line]
+                    lines.append(single_column)
+                    column_beginning = -1
+                    break
+
+                current_column = line[column_beginning:column_divider]
+                current_line.append(current_column)
+                column_beginning = column_divider
+
+            # a is legacy code            
+            a = page_column_dividers[-1][0]
+
+            if line_size > a and column_beginning != -1:
+                 current_line.append(line[a])
+
+            lines.append(current_line)
+        return lines
+
+    def test_if_page_is_not_splittable(self, page_average_columns, page_column_dividers, page_n_of_columns):
+        """
+        
+        Args
+            page_average_columns: TODO  
+            page_column_dividers: TODO
+            page_n_of_columns: TODO
+
+        Returns: boolean
+        
+        """
+
+        average_columns_in_total = self.total_avg_col
+        maximum_of_columns_allowed = self.max_allowed_cols
+
+        too_many_columns = page_n_of_columns >= maximum_of_columns_allowed
+        no_dividers  =  page_column_dividers == []
+
+        threshold = 1.2 
+        more_pages_than_average = page_average_columns >= (threshold * average_columns_in_total)
+
+        min_columns = 2
+        too_few_columns = page_average_columns < min_columns
+
+        result = more_pages_than_average or \
+                 too_few_columns  or \
+                 too_many_columns  or \
+                 no_dividers
+        
+        return(result)
 
 
     def lines_to_text(self, lines):
