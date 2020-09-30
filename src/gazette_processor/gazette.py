@@ -212,10 +212,40 @@ class Gazette:
 
 
     def vertical_lines_finder(self, page):
-        max_cols = max([len(line) for line in page])
 
+        line_sizes = [len(line) for line in page]
+        max_line_size = max(line_sizes)
+
+        contiguous_space_lengths = self.get_contiguous_space_lengths(max_line_size, page)
+        vertical_lines = sorted(contiguous_space_lengths, key=lambda x: x[1], reverse=True)
+
+        if len(vertical_lines) == 0 or vertical_lines[0][1] < self.min_break_value: 
+            return []
+
+        valid_vertical_lines = [i for i in vertical_lines if i[1] > self.min_break_value]
+        
+        if len(valid_vertical_lines) == 0: 
+            return []
+        
+        candidate_breakpoints = [valid_vertical_lines[0]]
+
+        col_ctd = 1
+
+        while col_ctd < max_line_size:
+            try:
+                if abs(candidate_breakpoints[-1][0] - valid_vertical_lines[col_ctd][0]) >= 10:
+                    if valid_vertical_lines[col_ctd] not in candidate_breakpoints:
+                        candidate_breakpoints.append(valid_vertical_lines[col_ctd])
+            except: 
+                pass
+            col_ctd +=1
+
+
+        return candidate_breakpoints
+
+    def get_contiguous_space_lengths(self, max_line_size, page):
         contiguous_space_lengths = []
-        for col_n in range(max_cols-1, -1, -1):
+        for col_n in range(max_line_size-1, -1, -1):
             ctd = 0
             max_val = 0
             for i,line in enumerate(page):
@@ -228,25 +258,7 @@ class Gazette:
 
             contiguous_space_lengths.append((col_n, round(max_val/len(page), 2)))
 
-        v_lines = sorted(contiguous_space_lengths, key=lambda x: x[1], reverse=True)
-
-        if len(v_lines) == 0 or v_lines[0][1] < self.min_break_value: return []
-        v_lines = [i for i in v_lines if i[1] > self.min_break_value]
-        if len(v_lines) == 0: return []
-        splits = [v_lines[0]]
-
-        col_ctd = 1
-
-        while col_ctd < max_cols:
-            try:
-                if abs(splits[-1][0] - v_lines[col_ctd][0]) >= 10:
-                    if v_lines[col_ctd] not in splits:
-                        splits.append(v_lines[col_ctd])
-            except: pass
-            col_ctd +=1
-
-
-        return splits
+        return contiguous_space_lengths
 
 
     @staticmethod
