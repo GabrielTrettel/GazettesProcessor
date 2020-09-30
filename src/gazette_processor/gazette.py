@@ -4,8 +4,8 @@ from math import ceil
 
 class Gazette:
     """
-    
-    Loads and parses municipal gazettes. 
+
+    Loads and parses municipal gazettes.
 
 
     Attributes:
@@ -14,18 +14,18 @@ class Gazette:
         city: A string for the city (or cities) of the gazette.
         date: A string for the date of the gazette.
 
-        minimum_spacing_between_cols: An integer for minimum spacingbetween columns. Defaults to 1. 
+        minimum_spacing_between_cols: An integer for minimum spacingbetween columns. Defaults to 1.
         min_break_value: A float for min_break_value. Defaults to 0.75.
         max_allowed_cols: An int for the maximum number of columns allowed per page.
         split_re: A regex for splitting
-        
+
         pages: A list of pages, each page is a list of lines.
 
         cols_dividers: ?
         pages_avg_col: ?
         total_avg_col: ?
-    
-    
+
+
     """
     def __init__(self, file_path:str, city:str, date:str):
         """Inits Gazette with a path, a city and a date."""
@@ -49,18 +49,18 @@ class Gazette:
             self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         else:
             self.total_avg_col = 0
-        
+
         self.__split_cols()
 
         print(self.linear_text)
 
 
     def get_list_of_pages(self, page_break='\014'):
-        """ 
-        Uses file string in self.file and converts it to  a list of lists. 
+        """
+        Uses file string in self.file and converts it to  a list of lists.
 
         Args:
-            page_break (str): A string used to delimit page separation 
+            page_break (str): A string used to delimit page separation
             in the target document.
 
         Returns:
@@ -79,7 +79,7 @@ class Gazette:
                 full_page = page_buffer
                 pages.append(full_page)
                 page_buffer = self.reset_buffer(line, page_break)
-        
+
         # Add last page 
         if len(page_buffer) > 0:
             pages.append(page_buffer)
@@ -88,14 +88,14 @@ class Gazette:
 
 
     def reset_buffer(self, line, page_break):
-         return([line.strip(page_break)])
+         return [line.strip(page_break)]
 
 
     def __split_cols(self):
         """
-        
+
         Splits columns of document into a linear layout
-        
+
         """
 
         column_dividers = self.cols_dividers
@@ -107,7 +107,7 @@ class Gazette:
 
             page_n_of_columns = len(page_column_dividers)
             page_average_columns = average_columns_per_page[page_index]
-            
+
             if  self.test_if_page_is_not_splittable(page_average_columns, page_column_dividers, page_n_of_columns):
 
                 page_add_to_linear_text = str("".join(page)) + '\014'
@@ -123,14 +123,14 @@ class Gazette:
 
     def get_lines_in_one_column(self, page, page_column_dividers):
         """
-        
+
         Args
-            page: A list of strings, and each string is a line in the page. 
+            page: A list of strings, and each string is a line in the page.
 
             page_column_dividers: A list of ints that were selected as column dividers.
 
         Returns: A list of strings, and each string is a line in the new page.
-        
+
         """
 
         lines = []
@@ -170,14 +170,14 @@ class Gazette:
 
     def test_if_page_is_not_splittable(self, page_average_columns, page_column_dividers, page_n_of_columns):
         """
-        
+
         Args
-            page_average_columns: TODO  
+            page_average_columns: TODO
             page_column_dividers: TODO
             page_n_of_columns: TODO
 
         Returns: boolean
-        
+
         """
 
         average_columns_in_total = self.total_avg_col
@@ -186,7 +186,7 @@ class Gazette:
         too_many_columns = page_n_of_columns >= maximum_of_columns_allowed
         no_dividers  =  page_column_dividers == []
 
-        threshold = 1.2 
+        threshold = 1.2
         more_pages_than_average = page_average_columns >= (threshold * average_columns_in_total)
 
         min_columns = 2
@@ -196,8 +196,8 @@ class Gazette:
                  too_few_columns  or \
                  too_many_columns  or \
                  no_dividers
-        
-        return(result)
+
+        return result
 
 
     def lines_to_text(self, lines):
