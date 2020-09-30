@@ -54,10 +54,9 @@ class Gazette:
 
         print(self.linear_text)
 
-    
+
     def get_list_of_pages(self, page_break='\014'):
         """ 
-
         Uses file string in self.file and converts it to  a list of lists. 
 
         Args:
@@ -68,26 +67,35 @@ class Gazette:
             list: A list of pages, each page is a list of lines.
 
         """
+        file = self.file
         pages = []
-        page_buff = []
+        page_buffer = []
 
 
-        for line in self.file:
-            if page_break in line:
-                pages.append(page_buff)
-                page_buff = [line.strip(page_break)]
+        for line in file:
+            if page_break not in line:
+                page_buffer.append(line)
             else:
-                page_buff.append(line)
-
-        if len(page_buff) > 0:
-            pages.append(page_buff)
+                full_page = page_buffer
+                pages.append(full_page)
+                page_buffer = self.reset_buffer(line, page_break)
+        
+        # Add last page 
+        if len(page_buffer) > 0:
+            pages.append(page_buffer)
 
         return pages
 
 
+    def reset_buffer(self, line, page_break):
+         return([line.strip(page_break)])
+
+
     def __split_cols(self):
         """
+        
         Splits columns of document into a linear layout
+        
         """
 
         for i,page in enumerate(self.pages):
