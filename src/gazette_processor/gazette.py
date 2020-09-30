@@ -45,7 +45,11 @@ class Gazette:
 
         self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
         # print(self.pages_avg_col)
-        self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
+        if self.pages_avg_col:
+            self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
+        else:
+            self.total_avg_col = 0
+        
         self.__split_cols()
 
         print(self.linear_text)
