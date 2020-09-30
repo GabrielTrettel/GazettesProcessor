@@ -52,19 +52,18 @@ class Gazette:
 
     
     def get_list_of_pages(self, page_break='\014'):
-    """ 
+        """ 
 
-    Uses file string in self.file and converts it to  a list of lists. 
+        Uses file string in self.file and converts it to  a list of lists. 
 
-    Args:
-        page_break (str): A string used to delimit page separation 
-        in the target document.
-    
-    Returns:
-        list: A list of pages, each page is a list of lines.
-    
-    """
+        Args:
+            page_break (str): A string used to delimit page separation 
+            in the target document.
 
+        Returns:
+            list: A list of pages, each page is a list of lines.
+
+        """
         pages = []
         page_buff = []
 

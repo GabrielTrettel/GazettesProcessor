@@ -1,84 +1,81 @@
-coluna1as  coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1as  coluna1 coluna1          coluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 asd coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1 asd coluna1 coluna1         coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             col una2 coluna2 coluna2
+coluna1 coluna1 coluna1             coluna2 colun a2 coluna2
+colun a1 cluna1 coluna1             col  una2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1s coluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             col una  coluna2 coluna2
+colun a1 couna1 coluna1             colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 as coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1 col una1 coluna1            coluna2 coluna2 coluna2
+coluna1 colun a1 coluna1            c oluna2 colu n a2 coluna2
+colna1  coluna1 coluna1             coluna2  coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1s coluna1 coluna1            c oluna2  coluna2 coluna2
+coluna1 c oluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 as coluna1 coluna1          coluna2 c oluna2 coluna2
+coluna1 coluna1 coluna1             colu na2 colu na2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 as coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s  coluna1 coluna1             coluna2 coluna2 coluna2
+coluna 1 coluna1 coluna1            coluna 2 col coluna2 coluna2
+coluna1s  coluna1 coluna1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             colu na2 colu na2 coluna2
+coluna1 colun a1 coluna1            coluna 2 coluna2 coluna2
+c oluna1 coluna1 coluna1            coluna2 coluna2 coluna2
 
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+co luna1 co luna1 coluna1           coluna2 coluna2 coluna2
+coluna1 col una1 c oluna1           colun a2 coluna2 coluna2
+col una1 coluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             colun a2 coluna2 coluna2
+colun a1 coluna1 coluna1            coluna2 coluna2 coluna2
+col una1 col una1 coluna1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1s coluna1 coluna1            colu na2 coluna2 coluna2
+coluna1 colu na1 coluna1            coluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1 colu na1 colu na1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1  col una1 coluna1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+ coluna1 col una1 coluna1           col una2 coluna2 coluna2
+coluna1s coluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             oluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1  col una1 coluna1           coluna2 coluna2 coluna2
+colu na1 col una1 coluna1           coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             col una2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+colu na1 coluna1 coluna1            coluna2 coluna2 coluna2
+col una1 coluna1 coluna1            col una2 coluna2 coluna2
+coluna1 colun a1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             colun 2 coluna2 coluna2
 
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+co luna1 co luna1 coluna1           coluna2 coluna2 coluna2
+coluna1 col una1 c oluna1           colun a2 coluna2 coluna2
+col una1 coluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             colun a2 coluna2 coluna2
+colun a1 coluna1 coluna1            coluna2 coluna2 coluna2
+col una1 col una1 coluna1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1s coluna1 coluna1            colu na2 coluna2 coluna2
+coluna1 colu na1 coluna1            coluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1 colu na1 colu na1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1  col una1 coluna1           colu na2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
+ coluna1 col una1 coluna1           col una2 coluna2 coluna2
+coluna1s coluna1 coluna1            coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             oluna2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+coluna1  col una1 coluna1           coluna2 coluna2 coluna2
+colu na1 col una1 coluna1           coluna2 coluna2 coluna2
+coluna1 coluna1 coluna1             col una2 coluna2 coluna2
 coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1s coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
-coluna1 coluna1 coluna1             coluna2 coluna2 coluna2
+
