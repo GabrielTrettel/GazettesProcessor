@@ -15,7 +15,7 @@ class Gazette:
         date: A string for the date of the gazette.
 
         minimum_spacing_between_cols: An integer for minimum spacingbetween columns. Defaults to 1.
-        min_break_value: A float for min_break_value. Defaults to 0.75.
+        min_break_ratio: A float for min_break_ratio. Defaults to 0.75.
         max_allowed_cols: An int for the maximum number of columns allowed per page.
         split_re: A regex for splitting
 
@@ -35,7 +35,7 @@ class Gazette:
         self.date = date
 
         self.minimum_spacing_between_cols = 1
-        self.min_break_value = 0.75
+        self.min_break_ratio = 0.75
         self.max_allowed_cols = 5
         self.split_re = r"  +"
 
@@ -52,7 +52,7 @@ class Gazette:
 
         self.__split_cols()
 
-        print(self.linear_text)
+        #  print(self.linear_text)
 
 
     def get_list_of_pages(self, page_break='\014'):
@@ -212,53 +212,55 @@ class Gazette:
 
 
     def vertical_lines_finder(self, page):
+        max_line_size = max(len(line) for line in page)
 
-        line_sizes = [len(line) for line in page]
-        max_line_size = max(line_sizes)
-
-        contiguous_space_lengths = self.get_contiguous_space_lengths(max_line_size, page)
-        vertical_lines = sorted(contiguous_space_lengths, key=lambda x: x[1], reverse=True)
-
-        if len(vertical_lines) == 0 or vertical_lines[0][1] < self.min_break_value: 
-            return []
-
-        valid_vertical_lines = [i for i in vertical_lines if i[1] > self.min_break_value]
-        
-        if len(valid_vertical_lines) == 0: 
-            return []
-        
-        candidate_breakpoints = [valid_vertical_lines[0]]
-
-        col_ctd = 1
-
-        while col_ctd < max_line_size:
-            try:
-                if abs(candidate_breakpoints[-1][0] - valid_vertical_lines[col_ctd][0]) >= 10:
-                    if valid_vertical_lines[col_ctd] not in candidate_breakpoints:
-                        candidate_breakpoints.append(valid_vertical_lines[col_ctd])
-            except: 
-                pass
-            col_ctd +=1
-
+        vertical_lines = self.get_contiguous_space_heights(max_line_size, page)
+        candidate_breakpoints = self.remove_contiguous_vertical_lines(vertical_lines, max_line_size)
 
         return candidate_breakpoints
 
-    def get_contiguous_space_lengths(self, max_line_size, page):
-        contiguous_space_lengths = []
+
+    def remove_contiguous_vertical_lines(self, vertical_lines, max_line_size):
+        if vertical_lines == []:
+            return []
+
+        candidate_breakpoints = [vertical_lines[0]]
+        col_ctd = 1
+        while col_ctd < max_line_size and col_ctd < len(vertical_lines):
+            if self.columns_have_minimum_distance(col_ctd, candidate_breakpoints, vertical_lines):
+                if vertical_lines[col_ctd] not in candidate_breakpoints:
+                    candidate_breakpoints.append(vertical_lines[col_ctd])
+
+            col_ctd +=1
+
+        return candidate_breakpoints
+
+
+    def columns_have_minimum_distance(self, col_ctd, candidate_breakpoints, vertical_lines, distance=10):
+        return abs(candidate_breakpoints[-1][0] - vertical_lines[col_ctd][0]) >= distance
+
+
+    def get_contiguous_space_heights(self, max_line_size, page):
+        contiguous_space_heights = []
         for col_n in range(max_line_size-1, -1, -1):
             ctd = 0
             max_val = 0
-            for i,line in enumerate(page):
+            for line in page:
                 max_val = max(max_val, ctd)
                 if len(line) > col_n:
                     if line[col_n] == ' ':
                         ctd += 1
-                    else: #if len(page)>i+1 and len(page[i+1]) > col_n and  page[i+1][col_n] != ' ':
+                    else:
                         ctd = 0
 
-            contiguous_space_lengths.append((col_n, round(max_val/len(page), 2)))
+            break_ratio = round(max_val/len(page), 2)
 
-        return contiguous_space_lengths
+            if break_ratio > self.min_break_ratio:
+                contiguous_space_heights.append((col_n, break_ratio))
+
+        contiguous_space_heights = sorted(contiguous_space_heights, key=lambda x: x[1], reverse=True)
+
+        return contiguous_space_heights
 
 
     @staticmethod
@@ -272,14 +274,17 @@ class Gazette:
 
 if __name__ == "__main__":
     input_f = sys.argv[1]
-    output_f = sys.argv[2]
 
-    for file in os.listdir(input_f):
-        g = Gazette(input_f + '/' + file,"", "")
+    g = Gazette(input_f, "", "")
+    #  g.__split_cols()
+    print(g.linear_text)
 
-        print(f"Parsing {file}")
-        with open( output_f + "/" + file, 'w') as f:
-            f.write(g.linear_text)
+    #  for file in os.listdir(input_f):
+    #      g = Gazette(input_f + '/' + file,"", "")
+    #  
+    #      #  print(f"Parsing {file}")
+    #      with open( output_f + "/" + file, 'w') as f:
+    #          f.write(g.linear_text)
 
 
 
