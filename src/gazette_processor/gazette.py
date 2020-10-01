@@ -37,12 +37,11 @@ class Gazette:
         self.minimum_spacing_between_cols = 1
         self.min_break_ratio = 0.75
         self.max_allowed_cols = 5
-        self.split_re = r"  +"
 
         self.pages = self.get_list_of_pages()
         self.linear_text = ""
         self.cols_dividers = [self.vertical_lines_finder(x) for x in self.pages]
-
+        print(self.cols_dividers)
         self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
         # print(self.pages_avg_col)
         if self.pages_avg_col:
@@ -116,7 +115,9 @@ class Gazette:
                 continue
 
 
+            print(page_column_dividers)
             page_lines_in_one_column = self.get_lines_in_one_column(page, page_column_dividers)
+
 
             self.linear_text += self.lines_to_text(page_lines_in_one_column) + '\014'
 
@@ -126,32 +127,27 @@ class Gazette:
 
         Args
             page: A list of strings, and each string is a line in the page.
-
             page_column_dividers: A list of ints that were selected as column dividers.
 
         Returns: A list of strings, and each string is a line in the new page.
 
         """
 
-        lines = []
+        longest_line_len = max(len(line) for line in page)
+        page_column_dividers.append((longest_line_len,0))
+
+        lines_to_return = []
         for line in page:
             column_beginning = 0
             current_line = []
-
+            line_size = len(line)
 
             for column_divider, _ in page_column_dividers:
 
-                line_size = len(line)
-
-                if line_size > column_divider:
-                    current_breakpoint = line[column_divider]
-                else:
-                    current_breakpoint = ""
-
-                if line_size > column_divider and current_breakpoint != ' ':
+                if line_size > column_divider and line[column_divider] != ' ':
 
                     single_column = [line]
-                    lines.append(single_column)
+                    lines_to_return.append(single_column)
                     column_beginning = -1
                     break
 
@@ -159,14 +155,11 @@ class Gazette:
                 current_line.append(current_column)
                 column_beginning = column_divider
 
-            # a is legacy code            
-            a = page_column_dividers[-1][0]
+            lines_to_return.append(current_line)
 
-            if line_size > a and column_beginning != -1:
-                 current_line.append(line[a])
+        return lines_to_return
 
-            lines.append(current_line)
-        return lines
+
 
     def test_if_page_is_not_splittable(self, page_average_columns, page_column_dividers, page_n_of_columns):
         """
@@ -216,7 +209,7 @@ class Gazette:
 
         vertical_lines = self.get_contiguous_space_heights(max_line_size, page)
         candidate_breakpoints = self.remove_contiguous_vertical_lines(vertical_lines, max_line_size)
-
+        print()
         return candidate_breakpoints
 
 
@@ -236,22 +229,24 @@ class Gazette:
         return candidate_breakpoints
 
 
-    def columns_have_minimum_distance(self, col_ctd, candidate_breakpoints, vertical_lines, distance=10):
+    def columns_have_minimum_distance(self, col_ctd, candidate_breakpoints, vertical_lines, distance=20):
         return abs(candidate_breakpoints[-1][0] - vertical_lines[col_ctd][0]) >= distance
 
 
     def get_contiguous_space_heights(self, max_line_size, page):
         contiguous_space_heights = []
         for col_n in range(max_line_size-1, -1, -1):
-            ctd = 0
+            ctd = 1
             max_val = 0
             for line in page:
                 max_val = max(max_val, ctd)
-                if len(line) > col_n:
+                if len(line) <= col_n:
+                    ctd += 1
+                else:
                     if line[col_n] == ' ':
                         ctd += 1
                     else:
-                        ctd = 0
+                        ctd = 1
 
             break_ratio = round(max_val/len(page), 2)
 
