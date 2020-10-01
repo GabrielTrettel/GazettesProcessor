@@ -43,15 +43,14 @@ class Gazette:
         self.cols_dividers = [self.vertical_lines_finder(x) for x in self.pages]
         print(self.cols_dividers)
         self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
-        # print(self.pages_avg_col)
+
         if self.pages_avg_col:
             self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         else:
             self.total_avg_col = 0
 
-        self.__split_cols()
+        self.split_cols()
 
-        #  print(self.linear_text)
 
 
     def get_list_of_pages(self, page_break='\014'):
@@ -90,7 +89,7 @@ class Gazette:
          return [line.strip(page_break)]
 
 
-    def __split_cols(self):
+    def split_cols(self):
         """
 
         Splits columns of document into a linear layout
@@ -101,25 +100,17 @@ class Gazette:
         average_columns_per_page = self.pages_avg_col
 
         for page_index, page in enumerate(self.pages):
-
             page_column_dividers =  column_dividers[page_index]
-
-            page_n_of_columns = len(page_column_dividers)
             page_average_columns = average_columns_per_page[page_index]
+            page_n_of_columns    = len(page_column_dividers)
 
-            if  self.test_if_page_is_not_splittable(page_average_columns, page_column_dividers, page_n_of_columns):
-
+            if self.test_if_page_is_not_splittable(page_average_columns, page_column_dividers, page_n_of_columns):
                 page_add_to_linear_text = str("".join(page)) + '\014'
-
                 self.linear_text += page_add_to_linear_text
                 continue
 
-
-            print(page_column_dividers)
             page_lines_in_one_column = self.get_lines_in_one_column(page, page_column_dividers)
-
-
-            self.linear_text += self.lines_to_text(page_lines_in_one_column) + '\014'
+            self.linear_text += self.lines_to_text(page_lines_in_one_column)
 
 
     def get_lines_in_one_column(self, page, page_column_dividers):
@@ -143,9 +134,7 @@ class Gazette:
             line_size = len(line)
 
             for column_divider, _ in page_column_dividers:
-
                 if line_size > column_divider and line[column_divider] != ' ':
-
                     single_column = [line]
                     lines_to_return.append(single_column)
                     column_beginning = -1
@@ -194,14 +183,16 @@ class Gazette:
 
 
     def lines_to_text(self, lines):
-       max_cols = max(map(lambda x: len(x), lines))
-       txt = ""
-       for col_i in range(max_cols):
-           for line in lines:
-               if len(line) > col_i:
-                   txt += "".join(line[col_i].strip('\n')) + '\n'
+        max_cols = max(map(lambda x: len(x), lines))
+        txt = ""
+        for col_i in range(max_cols):
+            for line in lines:
+                if len(line) > col_i:
+                    txt += "".join(line[col_i].strip('\n')) + '\n'
 
-       return txt[:-1]
+            txt += "\014\n"
+
+        return txt[:-1]
 
 
     def vertical_lines_finder(self, page):
@@ -240,6 +231,7 @@ class Gazette:
             max_val = 0
             for line in page:
                 max_val = max(max_val, ctd)
+
                 if len(line) <= col_n:
                     ctd += 1
                 else:
