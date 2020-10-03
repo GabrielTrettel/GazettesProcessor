@@ -1,5 +1,5 @@
 import os,sys, re
-from math import ceil
+from math import ceil, floor
 
 
 class Gazette:
@@ -41,9 +41,9 @@ class Gazette:
         self.pages = self.get_list_of_pages()
         self.linear_text = ""
         self.cols_dividers = [self.vertical_lines_finder(x) for x in self.pages]
-        print(self.cols_dividers)
         self.pages_avg_col = [len(x)+1 for x in self.cols_dividers]
 
+        #  print(self.pages_avg_col)
         if self.pages_avg_col:
             self.total_avg_col = sum(self.pages_avg_col) / len(self.pages_avg_col)
         else:
@@ -51,6 +51,8 @@ class Gazette:
 
         self.split_cols()
 
+        print(self.total_avg_col)
+        #  print(self.linear_text)
 
 
     def get_list_of_pages(self, page_break='\014'):
@@ -65,12 +67,11 @@ class Gazette:
             list: A list of pages, each page is a list of lines.
 
         """
-        file = self.file
         pages = []
         page_buffer = []
 
 
-        for line in file:
+        for line in self.file:
             if page_break not in line:
                 page_buffer.append(line)
             else:
@@ -186,11 +187,17 @@ class Gazette:
         max_cols = max(map(lambda x: len(x), lines))
         txt = ""
         for col_i in range(max_cols):
+            page_has_content = False
+
             for line in lines:
                 if len(line) > col_i:
-                    txt += "".join(line[col_i].strip('\n')) + '\n'
+                    if line[col_i] != '' and line[col_i].strip() != '':
+                        txt += "".join(line[col_i].strip('\n')) + '\n'
+                        page_has_content = True
 
-            txt += "\014\n"
+
+            if lines != [] and page_has_content:
+                txt += "\014\n"
 
         return txt[:-1]
 
@@ -200,7 +207,6 @@ class Gazette:
 
         vertical_lines = self.get_contiguous_space_heights(max_line_size, page)
         candidate_breakpoints = self.remove_contiguous_vertical_lines(vertical_lines, max_line_size)
-        print()
         return candidate_breakpoints
 
 
@@ -226,16 +232,22 @@ class Gazette:
 
     def get_contiguous_space_heights(self, max_line_size, page):
         contiguous_space_heights = []
-        for col_n in range(max_line_size-1, -1, -1):
+
+        left_delimiter  = floor(0.2 * max_line_size)
+        rigth_delimiter = floor(0.8 * max_line_size)
+        parsing_window = range(rigth_delimiter, left_delimiter, -1)
+
+        for col_idx in parsing_window:
             ctd = 1
             max_val = 0
-            for line in page:
+
+            for line_idx, line in enumerate(page):
                 max_val = max(max_val, ctd)
 
-                if len(line) <= col_n:
+                if len(line) <= col_idx:
                     ctd += 1
                 else:
-                    if line[col_n] == ' ':
+                    if self.col_offset_is_only_spaces(page, line_idx, col_idx):
                         ctd += 1
                     else:
                         ctd = 1
@@ -243,11 +255,29 @@ class Gazette:
             break_ratio = round(max_val/len(page), 2)
 
             if break_ratio > self.min_break_ratio:
-                contiguous_space_heights.append((col_n, break_ratio))
+                contiguous_space_heights.append((col_idx, break_ratio))
 
         contiguous_space_heights = sorted(contiguous_space_heights, key=lambda x: x[1], reverse=True)
 
         return contiguous_space_heights
+
+
+    def get_item_from_list(self, line, col_idx, default=' '):
+        """
+            Returns an list item if it exists, or ´default´, otherwise
+        """
+        try:
+            return line[col_idx]
+        except:
+            return default
+
+
+    def col_offset_is_only_spaces(self, page, line_idx, col_idx, offset=6):
+        page_slice = page[line_idx : line_idx+offset]
+        col_slice = [self.get_item_from_list(line, col_idx) for line in page_slice]
+
+        return all(i==' ' for i in col_slice)
+
 
 
     @staticmethod
@@ -261,17 +291,18 @@ class Gazette:
 
 if __name__ == "__main__":
     input_f = sys.argv[1]
+    output_f = sys.argv[2]
 
-    g = Gazette(input_f, "", "")
+    #  g = Gazette(input_f, "", "")
     #  g.__split_cols()
-    print(g.linear_text)
+    #  print(g.linear_text)
 
-    #  for file in os.listdir(input_f):
-    #      g = Gazette(input_f + '/' + file,"", "")
-    #  
-    #      #  print(f"Parsing {file}")
-    #      with open( output_f + "/" + file, 'w') as f:
-    #          f.write(g.linear_text)
+    for file in os.listdir(input_f):
+        g = Gazette(input_f + '/' + file,"", "")
+
+        print(f"Parsing {file}")
+        with open( output_f + "/" + file, 'w') as f:
+            f.write(g.linear_text)
 
 
 
