@@ -5,7 +5,7 @@ import os
 
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
-        self.gp = Gazette('test/test_file.txt' , city="?", date="?")
+        self.gp = Gazette('test/test.txt' , city="?", date="?")
 
 
     def test_get_list_of_pages(self):
